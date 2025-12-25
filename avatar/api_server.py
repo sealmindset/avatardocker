@@ -70,14 +70,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Determine script directory for native mode fallback paths
+_script_dir = os.path.dirname(os.path.abspath(__file__))
+_native_data_dir = os.path.join(_script_dir, "lite-avatar", "data", "sample_data", "preload")
+_native_avatars_dir = os.path.join(_script_dir, "lite-avatar", "data", "avatars")
+
 # Global avatar instance (lazy loaded) - legacy single-avatar mode
 _avatar_instance = None
-_avatar_data_dir = os.environ.get("AVATAR_DATA_DIR", "/app/lite-avatar/data/sample_data/preload")
+_avatar_data_dir = os.environ.get("AVATAR_DATA_DIR", _native_data_dir)
 _init_error = None
 
 # Avatar pool manager for dynamic avatar swapping
 _avatar_pool: Optional[AvatarPoolManager] = None
-_avatars_base_dir = os.environ.get("AVATARS_BASE_DIR", "/app/lite-avatar/data/avatars")
+_avatars_base_dir = os.environ.get("AVATARS_BASE_DIR", _native_avatars_dir)
 _default_avatar_id = os.environ.get("DEFAULT_AVATAR_ID", None)
 _avatar_cache_size = int(os.environ.get("AVATAR_CACHE_SIZE", "3"))
 
@@ -422,7 +427,7 @@ async def render_avatar_upload(
 
 # Pre-rendered loop video storage
 # Use environment variable or derive from AVATAR_DATA_DIR
-_base_data_dir = os.path.dirname(_avatar_data_dir) if _avatar_data_dir else "/app/lite-avatar/data"
+_base_data_dir = os.path.dirname(_avatar_data_dir) if _avatar_data_dir else os.path.join(_script_dir, "lite-avatar", "data")
 LOOPS_DIR = os.environ.get("LOOPS_DIR", os.path.join(_base_data_dir, "loops"))
 os.makedirs(LOOPS_DIR, exist_ok=True)
 
