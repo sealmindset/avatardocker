@@ -1,0 +1,273 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand: 35 98% 45%;
+    --radius: 0.625rem;
+    --background: #ffffff;
+    --foreground: #0a0a0a;
+    --card: #ffffff;
+    --card-foreground: #0a0a0a;
+    --popover: #ffffff;
+    --popover-foreground: #0a0a0a;
+    --primary: #171717;
+    --primary-foreground: #fafafa;
+    --secondary: #f5f5f5;
+    --secondary-foreground: #171717;
+    --muted: #f5f5f5;
+    --muted-foreground: #737373;
+    --accent: #f5f5f5;
+    --accent-foreground: #171717;
+    --destructive: #ef4444;
+    --border: #e5e5e5;
+    --input: #e5e5e5;
+    --ring: #a3a3a3;
+  }
+
+  .dark {
+    --background: #0a0a0a;
+    --foreground: #fafafa;
+    --card: #171717;
+    --card-foreground: #fafafa;
+    --popover: #171717;
+    --popover-foreground: #fafafa;
+    --primary: #fafafa;
+    --primary-foreground: #171717;
+    --secondary: #262626;
+    --secondary-foreground: #fafafa;
+    --muted: #262626;
+    --muted-foreground: #a3a3a3;
+    --accent: #262626;
+    --accent-foreground: #fafafa;
+    --destructive: #dc2626;
+    --border: #262626;
+    --input: #262626;
+    --ring: #d4d4d4;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Dark mode overrides for hardcoded colors */
+
+/* Backgrounds */
+.dark .bg-white {
+  background-color: var(--card) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  background-color: var(--secondary) !important;
+}
+
+.dark .bg-gray-200 {
+  background-color: var(--muted) !important;
+}
+
+.dark .bg-gray-300 {
+  background-color: #404040 !important;
+}
+
+/* Text colors */
+.dark .text-gray-900 {
+  color: var(--foreground) !important;
+}
+
+.dark .text-gray-800,
+.dark .text-gray-700 {
+  color: var(--foreground) !important;
+}
+
+.dark .text-gray-600 {
+  color: var(--muted-foreground) !important;
+}
+
+.dark .text-gray-500,
+.dark .text-gray-400,
+.dark .text-gray-300 {
+  color: var(--muted-foreground) !important;
+}
+
+/* Borders */
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: var(--border) !important;
+}
+
+/* Hover states */
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-gray-100:hover {
+  background-color: var(--accent) !important;
+}
+
+.dark .hover\:bg-gray-200:hover {
+  background-color: #404040 !important;
+}
+
+.dark .hover\:text-gray-700:hover,
+.dark .hover\:text-gray-800:hover,
+.dark .hover\:text-gray-900:hover {
+  color: var(--foreground) !important;
+}
+
+.dark .hover\:bg-gray-800:hover {
+  background-color: #404040 !important;
+}
+
+/* Focus states */
+.dark .focus\:ring-blue-500:focus,
+.dark .focus\:ring-blue-300:focus {
+  --tw-ring-color: var(--ring) !important;
+}
+
+/* Colored backgrounds with dark mode variants */
+.dark .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+}
+.dark .bg-blue-100 {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+}
+.dark .bg-green-50 {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+}
+.dark .bg-green-100 {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+}
+.dark .bg-yellow-50 {
+  background-color: rgba(234, 179, 8, 0.15) !important;
+}
+.dark .bg-yellow-100 {
+  background-color: rgba(234, 179, 8, 0.2) !important;
+}
+.dark .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+}
+.dark .bg-amber-100 {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+}
+.dark .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+}
+.dark .bg-red-100 {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+}
+.dark .bg-purple-50 {
+  background-color: rgba(168, 85, 247, 0.15) !important;
+}
+.dark .bg-purple-100 {
+  background-color: rgba(168, 85, 247, 0.2) !important;
+}
+.dark .bg-orange-100 {
+  background-color: rgba(249, 115, 22, 0.2) !important;
+}
+
+/* Colored text in dark mode */
+.dark .text-blue-700,
+.dark .text-blue-600 {
+  color: #60a5fa !important;
+}
+.dark .text-green-700,
+.dark .text-green-600 {
+  color: #4ade80 !important;
+}
+.dark .text-yellow-700,
+.dark .text-yellow-800 {
+  color: #fcd34d !important;
+}
+.dark .text-amber-700,
+.dark .text-amber-900,
+.dark .text-amber-600 {
+  color: #fbbf24 !important;
+}
+.dark .text-red-700,
+.dark .text-red-600 {
+  color: #f87171 !important;
+}
+.dark .text-purple-700,
+.dark .text-purple-600 {
+  color: #c084fc !important;
+}
+.dark .text-orange-700 {
+  color: #fb923c !important;
+}
+
+/* Colored borders in dark mode */
+.dark .border-blue-200,
+.dark .border-blue-500 {
+  border-color: rgba(59, 130, 246, 0.4) !important;
+}
+.dark .border-green-200 {
+  border-color: rgba(34, 197, 94, 0.4) !important;
+}
+.dark .border-yellow-200 {
+  border-color: rgba(234, 179, 8, 0.4) !important;
+}
+.dark .border-amber-200 {
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+.dark .border-red-200 {
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+.dark .border-purple-200,
+.dark .border-purple-500 {
+  border-color: rgba(168, 85, 247, 0.4) !important;
+}
+
+/* Form inputs */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: var(--secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--foreground) !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: var(--muted-foreground) !important;
+}
+
+/* Tables */
+.dark table {
+  border-color: var(--border) !important;
+}
+
+.dark th {
+  color: var(--muted-foreground) !important;
+}
+
+.dark tr {
+  border-color: var(--border) !important;
+}
+
+/* Buttons */
+.dark .bg-black {
+  background-color: #fafafa !important;
+  color: #0a0a0a !important;
+}
+
+.dark .bg-black:hover {
+  background-color: #e5e5e5 !important;
+}
+
+/* Modals */
+.dark .bg-black\/50 {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+html, body {
+  height: 100%;
+}
+
+.container {
+  @apply mx-auto max-w-6xl px-4;
+}

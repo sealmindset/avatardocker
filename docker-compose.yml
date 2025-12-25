@@ -1,0 +1,142 @@
+services:
+  # PostgreSQL Database (using port 5534 to avoid conflict with dockerpulse)
+  db:
+    image: postgres:16-alpine
+    container_name: avatar-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pulse_analytics
+      POSTGRES_USER: pulse_admin
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-pulse_dev_password}
+    ports:
+      - "5534:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - avatar_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulse_admin -d pulse_analytics"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - avatar-network
+
+  # FastAPI Backend (MLX-only AI provider)
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: avatar-api
+    restart: unless-stopped
+    environment:
+      # Database (internal port 5432, external 5534)
+      DATABASE_URL: postgresql://pulse_admin:${DB_PASSWORD:-pulse_dev_password}@db:5432/pulse_analytics
+      
+      # AI Provider - MLX only (no OpenAI, Claude, Ollama)
+      AI_PROVIDER: mlx
+      
+      # MLX Configuration (connects to host machine)
+      MLX_BASE_URL: http://host.docker.internal:10240
+      MLX_MODEL: ${MLX_MODEL:-mlx-community/Qwen2.5-32B-Instruct-4bit}
+      
+      # TTS Configuration
+      TTS_PROVIDER: local
+      PIPER_TTS_URL: http://piper-tts:8000
+      
+      # Avatar Configuration
+      LITE_AVATAR_URL: http://avatar:8080
+      AVATARS_BASE_DIR: /app/avatars
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      
+      # CORS
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+    ports:
+      - "8150:8000"
+    volumes:
+      - ./data/avatars:/app/avatars
+    depends_on:
+      db:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - avatar-network
+
+  # Next.js UI
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    container_name: avatar-ui
+    restart: unless-stopped
+    environment:
+      # API URL (internal Docker network)
+      NEXT_PUBLIC_API_URL: http://localhost:8150
+      API_URL: http://api:8000
+      
+      # Avatar Configuration
+      AVATAR_MODE: ${AVATAR_MODE:-native}
+      LITE_AVATAR_URL: ${LITE_AVATAR_URL:-auto}
+      NEXT_PUBLIC_AVATAR_URL: http://localhost:8160
+      
+      # Feature flags
+      NEXT_PUBLIC_USE_LITE_AVATAR: "true"
+      NEXT_PUBLIC_USE_AVATAR_LOOPS: "true"
+      
+      # Auth mode (demo only, no Azure SSO)
+      NEXT_PUBLIC_AUTH_MODE: demo
+    ports:
+      - "3150:3000"
+    depends_on:
+      - api
+    networks:
+      - avatar-network
+
+  # Piper TTS Service
+  piper-tts:
+    build:
+      context: ./piper-tts
+      dockerfile: Dockerfile
+    container_name: avatar-piper-tts
+    restart: unless-stopped
+    ports:
+      - "8170:8000"
+    volumes:
+      - ./data/piper-voices:/app/voices
+    networks:
+      - avatar-network
+
+  # LiteAvatar Service (optional, uses Docker profile)
+  avatar:
+    build:
+      context: ./avatar
+      dockerfile: Dockerfile
+    container_name: avatar-liteavatar
+    restart: unless-stopped
+    profiles:
+      - avatar
+    environment:
+      AVATAR_DATA_DIR: /app/lite-avatar/data/sample_data/preload
+      AVATARS_BASE_DIR: /app/avatars
+      USE_AVATAR_POOL: "true"
+      AVATAR_POOL_MAX_SIZE: "3"
+      PIPER_TTS_URL: http://piper-tts:8000
+    ports:
+      - "8160:8080"
+    volumes:
+      - ./data/avatars:/app/avatars
+    depends_on:
+      - piper-tts
+    networks:
+      - avatar-network
+
+networks:
+  avatar-network:
+    name: avatar-network
+    driver: bridge
+
+volumes:
+  avatar_db_data:
+    name: avatar_db_data
