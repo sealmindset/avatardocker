@@ -88,6 +88,10 @@ services:
       
       # Auth mode (demo only, no Azure SSO)
       NEXT_PUBLIC_AUTH_MODE: demo
+      
+      # Admin UI and environment
+      NEXT_PUBLIC_ENABLE_ADMIN: "true"
+      NEXT_PUBLIC_ENV_NAME: local
     ports:
       - "3150:3000"
     depends_on:

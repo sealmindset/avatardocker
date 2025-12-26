@@ -2,6 +2,36 @@
 
 All notable changes to AvatarDocker are documented in this file.
 
+## [1.0.1] - 2025-01-13
+
+### Added - Log Management UI Port
+
+Ported complete Log Management UI from pulseapp to avatardocker.
+
+**New Files:**
+- `ui/app/admin/logs/page.tsx` - Log Management page with AI Search and Cribl Configuration tabs
+- `ui/components/admin/logs/AILogSearch.tsx` - AI-powered natural language log search component
+- `ui/components/admin/logs/LogDetailModal.tsx` - Detailed log entry viewer modal
+- `ui/app/api/admin/logs/search/route.ts` - Log search API with sample data for demo mode
+- `ui/app/api/admin/logs/config/route.ts` - Cribl configuration GET/POST API
+- `ui/app/api/admin/logs/test/route.ts` - Cribl connection test API
+
+**Features:**
+- Natural language log search (e.g., "What errors occurred in the last 24 hours?")
+- Time range presets (Last hour, Last 24h, Last 7 days, Today)
+- Log level filters (Errors, Warnings, All)
+- Pattern detection and AI insights
+- Log detail modal with copy/export functionality
+- Cribl Stream integration configuration (demo mode)
+- Connection testing for Cribl endpoints
+
+**Admin UI Status:**
+- ✅ Log Management - Fully ported with demo data
+- ✅ Authentication & Authorization - Already present (simplified demo-only version)
+- ✅ Avatar Manager - Already present with ModelScope catalog
+
+---
+
 ## [1.0.0] - 2025-12-25
 
 ### Initial Release
